@@ -2,54 +2,48 @@ import { StyleSheet } from 'react-native'
 import { Colors, Metrics } from '../../Themes'
 
 export default StyleSheet.create({
+  bg: {
+    width: Metrics.screenWidth,
+    height: Metrics.screenHeight,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   container: {
-    paddingTop: 70,
-    backgroundColor: Colors.background
   },
-  form: {
-    backgroundColor: Colors.snow,
-    margin: Metrics.baseMargin,
-    borderRadius: 4
+  content: {
+    backgroundColor: 'transparent',
+    height: Metrics.screenHeight/2,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  row: {
-    paddingVertical: Metrics.doubleBaseMargin,
-    paddingHorizontal: Metrics.doubleBaseMargin,
-    flexDirection: 'row',
-    flex: 1
+  logotxt: {
+    width: Metrics.screenWidth,
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'white',
+    justifyContent: 'center',
+    textAlign: 'center'
   },
-  rowLabel: {
-    color: Colors.charcoal
+  socialview: {
+    width: Metrics.screenWidth,
+    height: Metrics.screenHeight/2,
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+    flexDirection: 'row'
   },
-  textInput: {
-    height: 40,
-    color: Colors.coal
+  icon: {
+    color: 'white',
+    fontSize: 40,
+    marginLeft: 20,
+    marginRight: 20
   },
-  textInputReadonly: {
-    height: 40,
-    color: Colors.steel
+  center: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  loginRow: {
-    paddingBottom: Metrics.doubleBaseMargin,
-    paddingHorizontal: Metrics.doubleBaseMargin,
-    flexDirection: 'row',
-    marginTop: 10
-  },
-  loginButtonWrapper: {
-    flex: 1
-  },
-  loginButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: Colors.charcoal,
-    backgroundColor: Colors.panther,
-    padding: 6
-  },
-  loginText: {
-    textAlign: 'center',
-    color: Colors.silver
-  },
-  topLogo: {
-    alignSelf: 'center',
-    resizeMode: 'contain'
-  }
 })

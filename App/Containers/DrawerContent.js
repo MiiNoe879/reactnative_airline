@@ -1,30 +1,45 @@
 import React, { Component } from "react";
-import { ScrollView, Image, BackHandler } from "react-native";
-import { List, ListItem, Text, View, Content } from "native-base";
+import { ScrollView, Image, BackHandler, Dimensions, Platform } from "react-native";
+import { List, ListItem, Text, View, Container, Content, Thumbnail, Footer } from "native-base";
 
 import styles from "./Styles/DrawerContentStyles";
 import { Images } from "../Themes";
+import { connect } from 'react-redux';
+
+const {width, height} = Dimensions.get('window');
+const statusbarHeight = (Platform.OS ==='ios'?20:0)
 
 class DrawerContent extends Component {
 	render() {
 		const navigation = this.props.navigation;
-		const items = this.props.items;
+		const {user} = this.props.login;
 		return (
-			<View style={styles.container}>
-				<Image source={Images.logoDark} style={styles.logo} />
+			<Container style={styles.container}>
 				<Content>
-					<List
-						dataArray={items}
-						renderRow={item => (
-							<ListItem onPress={() => navigation.navigate(item.routeName)}>
-								<Text>{item.routeName}</Text>
-							</ListItem>
-						)}
-					/>
+					<View style={{flexDirection:'row', alignItems:'center'}}>
+						<Thumbnail large source={{uri: (user) ? user.photoURL : ''}} style={{margin:10}}/>
+						<View>
+							<Text style={{color:'black', fontSize:20}}>{(user) ? user.displayName : ''}</Text>
+						</View>
+					</View>
+					<List>
+					</List>
 				</Content>
-			</View>
+				<Footer style={styles.footer}>
+				</Footer>
+			</Container>
 		);
 	}
 }
 
-export default DrawerContent;
+const mapStateToProps = state => {
+    return {
+		login: state.login,
+    };
+};
+
+const mapDisaptchToProps = (dispatch) =>{
+    return{
+    }
+}
+export default connect(mapStateToProps, mapDisaptchToProps)(DrawerContent)

@@ -7,5 +7,9 @@ export default {
   logo: {
     width: 260,
     resizeMode: 'contain'
+  },
+  footer: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent'
   }
 }

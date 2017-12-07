@@ -8,12 +8,14 @@ import DebugConfig from '../Config/DebugConfig'
 import { StartupTypes } from '../Redux/StartupRedux'
 import { GithubTypes } from '../Redux/GithubRedux'
 import { LoginTypes } from '../Redux/LoginRedux'
+import { AirLineTypes } from '../Redux/AirLineRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
-import { login } from './LoginSagas'
+import { login, twitterLogin, facebookLogin, googleLogin } from './LoginSagas'
 import { getUserAvatar } from './GithubSagas'
+import { getAirLines } from './AirLineSagas'
 
 /* ------------- API ------------- */
 
@@ -26,10 +28,13 @@ const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
 export default function * root () {
   yield all([
     // some sagas only receive an action
-    takeLatest(StartupTypes.STARTUP, startup),
-    takeLatest(LoginTypes.LOGIN_REQUEST, login),
-
+    //takeLatest(StartupTypes.STARTUP, startup),
+    //takeLatest(LoginTypes.LOGIN_REQUEST, login),
+    takeLatest(LoginTypes.TWITTER_LOGIN_REQUEST, twitterLogin, api),
+    takeLatest(LoginTypes.FACEBOOK_LOGIN_REQUEST, facebookLogin, api),
+    takeLatest(LoginTypes.GOOGLE_LOGIN_REQUEST, googleLogin, api),
+    takeLatest(AirLineTypes.GET_AIR_LINES_REQUEST, getAirLines, api),
     // some sagas receive extra parameters in addition to an action
-    takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
+    //takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
   ])
 }

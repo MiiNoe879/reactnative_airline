@@ -1,10 +1,13 @@
 import React, { PropTypes } from "react";
-import { View, ScrollView, Text, TextInput, TouchableOpacity, Image, Keyboard, LayoutAnimation } from "react-native";
+import { View, ScrollView, Text, TextInput, TouchableOpacity, Image, Keyboard, ImageBackground, NativeModules, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
 import Styles from "./Styles/LoginScreenStyles";
 import { Images, Metrics } from "../Themes";
-import LoginActions from "../Redux/LoginRedux";
-import { Button, Text as NBText, Contant, Form, Item, Input, Label } from "native-base";
+import LoginActions, { isLoggedIn } from "../Redux/LoginRedux";
+import { Button, Text as NBText, Contant, Form, Item, Input, Label, Container, Content } from "native-base";
+import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+console.disableYellowBox = true;
 
 class LoginScreen extends React.Component {
 	static propTypes = {
@@ -14,148 +17,74 @@ class LoginScreen extends React.Component {
 	};
 
 	isAttempting = false;
-	keyboardDidShowListener = {};
-	keyboardDidHideListener = {};
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: "reactnative@infinite.red",
-			password: "password",
-			visibleHeight: Metrics.screenHeight,
-			topLogo: { width: Metrics.screenWidth - 40 },
 		};
 		this.isAttempting = false;
 	}
 
 	componentWillReceiveProps(newProps) {
-		this.forceUpdate();
-		// Did the login attempt complete?
-		if (this.isAttempting && !newProps.fetching) {
-			this.props.navigation.goBack();
+		const {user} = newProps.login;
+		const {fetching} = newProps.login;
+		this.isAttempting = fetching;
+		if(user){
+			this.props.navigation.navigate('NavigationDrawer');
 		}
 	}
 
 	componentWillMount() {
-		// Using keyboardWillShow/Hide looks 1,000 times better, but doesn't work on Android
-		// TODO: Revisit this if Android begins to support - https://github.com/facebook/react-native/issues/3468
-		this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", this.keyboardDidShow);
-		this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", this.keyboardDidHide);
 	}
 
 	componentWillUnmount() {
-		this.keyboardDidShowListener.remove();
-		this.keyboardDidHideListener.remove();
 	}
 
-	keyboardDidShow = e => {
-		// Animation types easeInEaseOut/linear/spring
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-		let newSize = Metrics.screenHeight - e.endCoordinates.height;
-		this.setState({
-			visibleHeight: newSize,
-			topLogo: { width: 100, height: 70 },
-		});
-	};
+	onTwitterLogin() {
+		this.props.attemptTwitterLogin();
+	}
 
-	keyboardDidHide = e => {
-		// Animation types easeInEaseOut/linear/spring
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-		this.setState({
-			visibleHeight: Metrics.screenHeight,
-			topLogo: { width: Metrics.screenWidth - 40 },
-		});
-	};
+	onFacebookLogin() {
+		this.props.attemptFacebookLogin();
+	}
 
-	handlePressLogin = () => {
-		// const { username, password } = this.state
-		// this.isAttempting = true
-		// attempt a login - a saga is listening to pick it up from here.
-		// this.props.attemptLogin(username, password);
-		this.props.navigation.navigate("LaunchScreen");
-	};
-
-	handleChangeUsername = text => {
-		this.setState({ username: text });
-	};
-
-	handleChangePassword = text => {
-		this.setState({ password: text });
-	};
+	onGoogleLogin() {
+		this.props.attemptGoogleLogin();
+	}
 
 	render() {
-		const { username, password } = this.state;
-		const { fetching } = this.props;
-		const editable = !fetching;
-		const textInputStyle = editable ? Styles.textInput : Styles.textInputReadonly;
 		return (
-			<ScrollView
-				contentContainerStyle={{ justifyContent: "center" }}
-				style={[Styles.container, { height: this.state.visibleHeight }]}
-				keyboardShouldPersistTaps="always"
-			>
-				<Image source={Images.logo} style={[Styles.topLogo, this.state.topLogo]} />
-				<View style={Styles.form}>
-					<Form>
-						<Item stackedLabel>
-							<Label>Username</Label>
-							<Input
-								ref="username"
-								value={username}
-								editable={editable}
-								keyboardType="default"
-								returnKeyType="next"
-								autoCapitalize="none"
-								autoCorrect={false}
-								onChangeText={this.handleChangeUsername}
-								underlineColorAndroid="transparent"
-								onSubmitEditing={() => this.password._root.focus()}
-							/>
-						</Item>
-						<Item stackedLabel>
-							<Label>Password</Label>
-							<Input
-								ref={ref => (this.password = ref)}
-								value={password}
-								editable={editable}
-								keyboardType="default"
-								returnKeyType="go"
-								autoCapitalize="none"
-								autoCorrect={false}
-								secureTextEntry
-								onChangeText={this.handleChangePassword}
-								underlineColorAndroid="transparent"
-								onSubmitEditing={this.handlePressLogin}
-							/>
-						</Item>
-					</Form>
-					<View style={[Styles.loginRow]}>
-						<Button style={{ flex: 1, justifyContent: "center" }} full onPress={this.handlePressLogin}>
-							<NBText>Sign In</NBText>
-						</Button>
-						<Button
-							style={{ flex: 1, justifyContent: "center" }}
-							full
-							onPress={() => this.props.navigation.goBack()}
-						>
-							<NBText>Cancel</NBText>
-						</Button>
-					</View>
-				</View>
-			</ScrollView>
+		  <ImageBackground source={Images.background} style={Styles.bg}>
+		  	{
+				(this.isAttempting) ?
+					(<ActivityIndicator size="large" color="#ffffff" style={Styles.center}/>)
+					: (<Text />)
+			}
+		  	<View style={Styles.content}>
+			  <Text style={Styles.logotxt}>CHECK IN</Text>
+			</View>
+			<View style={Styles.socialview}>
+				<IconFontAwesome name="facebook" style={Styles.icon} onPress={()=>this.onFacebookLogin()} />
+				<IconFontAwesome name="twitter" style={Styles.icon} onPress={()=>this.onTwitterLogin()} />
+				<IconFontAwesome name="google" style={Styles.icon} onPress={()=>this.onGoogleLogin()} />
+				<IconFontAwesome name="phone" style={Styles.icon} />
+			</View>
+		  </ImageBackground>
 		);
 	}
 }
 
 const mapStateToProps = state => {
 	return {
-		fetching: state.login.fetching,
+		login: state.login,
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		attemptLogin: (username, password) => dispatch(LoginActions.loginRequest(username, password)),
+		attemptTwitterLogin: () => dispatch(LoginActions.twitterLoginRequest()),
+		attemptFacebookLogin: () => dispatch(LoginActions.facebookLoginRequest()),
+		attemptGoogleLogin: () => dispatch(LoginActions.googleLoginRequest())
 	};
 };
 
