@@ -66,10 +66,10 @@ class HomeScreen extends Component {
     for(let airline in airlines){
       key += index;
       result.push(
-          <View key={key} style={{width: (deviceWidth-70)/3, alignItems: 'center', justifyContent:'center', marginLeft: 10, marginRight: 10, marginBottom: 10}}>
+          <View key={key} style={styles.item}>
             <TouchableOpacity onPress={ ()=>this.onSelectAirLine(airlines[airline].url) }>
-              <ImageLoad source={{uri: airlines[airline].image}} style={{width: (deviceWidth-70)/3, height: (deviceWidth-70)/3}} borderRaius={(deviceWidth-70)/6}/>
-              <Text style={{color: 'white', fontSize: 12, marginTop: 10, color: 'grey'}}>{airlines[airline].name}</Text>
+              <ImageLoad source={{uri: airlines[airline].image}} style={styles.image} />
+              <Text style={styles.name}>{airlines[airline].name}</Text>
             </TouchableOpacity>
           </View>
       );

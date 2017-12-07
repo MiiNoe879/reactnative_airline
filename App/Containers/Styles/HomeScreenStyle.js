@@ -24,5 +24,23 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 50,
     width: Metrics.screenWidth
+  },
+  name: {
+    fontSize: 12,
+    marginTop: 10,
+    color: 'grey',
+    textAlign: 'center'
+  },
+  image: {
+    width: (Metrics.screenWidth-70)/3,
+    height: (Metrics.screenWidth-70)/3
+  },
+  item: {
+    width: (Metrics.screenWidth-70)/3,
+    alignItems: 'center',
+    justifyContent:'center',
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10
   }
 })
